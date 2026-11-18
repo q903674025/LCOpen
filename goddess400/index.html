@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>女神经验团 400 速查</title>
+<style>
+  :root{--bg:#f6f4ef;--card:#fff;--ink:#22201c;--mute:#7a756c;--line:#e4dfd5;--acc:#c2410c;--ok:#15803d;--plat:#d6cfc2}
+  @media (prefers-color-scheme:dark){:root{--bg:#1b1a18;--card:#252320;--ink:#eeeae2;--mute:#9b958a;--line:#3a3732;--acc:#fb923c;--ok:#4ade80;--plat:#4a463f}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  main{max-width:460px;margin:0 auto;padding:24px 16px 40px}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--mute);font-size:14px;margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  label{display:block;font-size:14px;color:var(--mute);margin-bottom:8px}
+  input{width:100%;font:600 34px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.5em;text-align:center;padding:14px 0 14px .5em;border:2px solid var(--line);border-radius:10px;background:transparent;color:var(--ink);outline:none}
+  input:focus{border-color:var(--acc)}
+  .hint{font-size:13px;color:var(--mute);margin-top:8px;min-height:1.4em}
+  .hint.err{color:var(--acc)}
+  .ans{display:flex;justify-content:space-between;gap:10px;margin-top:4px}
+  .slot{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:10px 0}
+  .slot b{display:block;font:700 40px/1.1 ui-monospace,Menlo,Consolas,monospace}
+  .slot span{font-size:13px;color:var(--mute)}
+  .ans.on b{color:var(--ok)}
+  .code{text-align:center;margin-top:10px;font-size:14px;color:var(--mute)}
+  .code button{font:inherit;margin-left:8px;padding:2px 10px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);cursor:pointer}
+  svg{display:block;width:100%;height:auto}
+  ol{margin:0;padding-left:1.3em}
+  li{margin-bottom:6px}
+  .foot{font-size:12px;color:var(--mute);text-align:center;margin-top:18px}
+</style>
+</head>
+<body>
+<main>
+  <h1>女神经验团 400 速查</h1>
+  <p class="sub">冒险岛世界：阿尔泰 · 天空之城女神之塔「封印之室」</p>
+
+  <div class="card">
+    <label for="q">测试结果（站地面、左、中、右，依次 4 个数字）</label>
+    <input id="q" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="····" autofocus>
+    <div class="hint" id="hint">输满 4 位自动出答案</div>
+  </div>
+
+  <div class="card">
+    <label>答案：每个平台站几人</label>
+    <div class="ans" id="ans">
+      <div class="slot"><b id="b">–</b><span>B 左</span></div>
+      <div class="slot"><b id="c">–</b><span>C 中</span></div>
+      <div class="slot"><b id="d">–</b><span>D 右</span></div>
+    </div>
+    <div class="code" id="code"></div>
+  </div>
+
+  <div class="card">
+    <label>平台位置</label>
+    <svg viewBox="0 0 300 170" role="img" aria-label="平台示意：A 地面，B 左，C 中上，D 右">
+      <rect x="125" y="22" width="50" height="16" rx="3" fill="var(--plat)"/>
+      <text x="150" y="16" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">C 中</text>
+      <rect x="40" y="78" width="60" height="16" rx="3" fill="var(--plat)"/>
+      <text x="70" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">B 左</text>
+      <circle cx="150" cy="82" r="26" fill="none" stroke="var(--plat)" stroke-width="6"/>
+      <rect x="200" y="78" width="60" height="16" rx="3" fill="var(--plat)"/>
+      <text x="230" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">D 右</text>
+      <rect x="10" y="140" width="280" height="18" rx="3" fill="var(--plat)"/>
+      <text x="150" y="134" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">A 地面（不站平台）</text>
+    </svg>
+  </div>
+
+  <div class="card">
+    <label>操作方法</label>
+    <ol>
+      <li>队长依次站在 A、B、C、D 四个位置，分别点击易克，得到四个数字；</li>
+      <li>把四个数字按顺序输入上面的框，得到三位数答案；</li>
+      <li>三位数分别是 B、C、D 三个平台应该站的人数，分配队员站上去；</li>
+      <li>队长点击易克即可通关。注意：答错 7 次全队会被传回大厅。</li>
+    </ol>
+  </div>
+
+  <p class="foot">原理：易克报的是“三个平台里有几个人数是对的”。4 人分 3 个平台共 15 种站法，每种的测试结果都不同。</p>
+</main>
+<script>
+  // 15 种站法 → 测试结果
+  const table = {};
+  for (let b = 0; b <= 4; b++) for (let c = 0; c <= 4 - b; c++) {
+    const ans = [b, c, 4 - b - c];
+    const key = [-1, 0, 1, 2].map(p => ans.filter((n, i) => n === (i === p ? 1 : 0)).length).join('');
+    table[key] = ans;
+  }
+  const $ = id => document.getElementById(id);
+  const q = $('q'), hint = $('hint'), ansBox = $('ans'), code = $('code');
+  function show(ans) {
+    ['b', 'c', 'd'].forEach((k, i) => $(k).textContent = ans ? ans[i] : '–');
+    ansBox.classList.toggle('on', !!ans);
+    code.innerHTML = ans ? '队频发：<b>' + ans.join('') + '</b><button id="cp">复制</button>' : '';
+    if (ans) $('cp').onclick = () => navigator.clipboard.writeText(ans.join('')).then(() => $('cp').textContent = '已复制').catch(() => {});
+  }
+  q.addEventListener('input', () => {
+    const v = q.value.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)).replace(/\D/g, '').slice(0, 4);
+    q.value = v;
+    hint.classList.remove('err');
+    if (v.length < 4) { show(null); hint.textContent = '输满 4 位自动出答案'; return; }
+    const ans = table[v];
+    if (ans) { show(ans); hint.textContent = '左 ' + ans[0] + ' 人 · 中 ' + ans[1] + ' 人 · 右 ' + ans[2] + ' 人'; }
+    else { show(null); hint.classList.add('err'); hint.textContent = '没有这个组合，检查一下有没有测错或输反顺序'; }
+  });
+</script>
+</body>
+</html>
