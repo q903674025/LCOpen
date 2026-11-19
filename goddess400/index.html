@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>女神经验团 400 速查</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1a18" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="女神400">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
   :root{--bg:#f6f4ef;--card:#fff;--ink:#22201c;--mute:#7a756c;--line:#e4dfd5;--acc:#c2410c;--ok:#15803d;--plat:#d6cfc2}
   @media (prefers-color-scheme:dark){:root{--bg:#1b1a18;--card:#252320;--ink:#eeeae2;--mute:#9b958a;--line:#3a3732;--acc:#fb923c;--ok:#4ade80;--plat:#4a463f}}
@@ -78,6 +87,7 @@
   </div>
 
   <p class="foot">原理：易克报的是“三个平台里有几个人数是对的”。4 人分 3 个平台共 15 种站法，每种的测试结果都不同。</p>
+  <p class="foot" id="install">装到手机：用浏览器打开本页，菜单里选「添加到主屏幕」（iPhone 用 Safari 的分享按钮），之后断网也能用。</p>
 </main>
 <script>
   // 15 种站法 → 测试结果
@@ -104,6 +114,9 @@
     if (ans) { show(ans); hint.textContent = '左 ' + ans[0] + ' 人 · 中 ' + ans[1] + ' 人 · 右 ' + ans[2] + ' 人'; }
     else { show(null); hint.classList.add('err'); hint.textContent = '没有这个组合，检查一下有没有测错或输反顺序'; }
   });
+  // 离线缓存（装到主屏幕后断网可用）；已经从主屏幕打开时隐藏安装提示
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) $('install').hidden = true;
 </script>
 </body>
 </html>
